@@ -17,7 +17,7 @@ window.STORE_CONFIG = {
   qrImage: "assets/qr.png",
 
   // Paste Google Apps Script Web App /exec URL
-  appsScriptUrl: "PASTE_APPS_SCRIPT_WEB_APP_URL_HERE",
+  appsScriptUrl: "https://script.google.com/macros/s/AKfycbzCFBRGNa2pBM4TI4sIBuKO_ik7jjc2m_JWHob14onnenFPYl65cm6sedU3oBfFvDPeiQ/exec",
 
   currency: "RM",
 
