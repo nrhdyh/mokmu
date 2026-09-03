@@ -3,35 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0f172a" />
-  <title>NiagaSimple</title>
-  <meta name="description" content="Sistem order cantik, simple dan sesuai untuk bisnes kecil." />
+  <meta name="theme-color" content="#f7f8f4" />
+  <meta name="description" content="NiagaSimple - sistem order mudah untuk bisnes kecil." />
+  <title>NiagaSimple | Pre-Order</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="bg-orb orb-1"></div>
-  <div class="bg-orb orb-2"></div>
-
-  <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="#">
-        <img src="assets/logo.png" alt="NiagaSimple logo" class="brand-logo" />
-        <div class="brand-copy">
-          <strong id="brandName">NiagaSimple</strong>
-          <span id="brandTagline">Order mudah, urus pun mudah.</span>
-        </div>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="brand" aria-label="NiagaSimple home">
+        <img src="assets/logo.png" alt="NiagaSimple" class="brand-logo" />
       </a>
 
-      <nav class="nav-links">
-        <a href="#menuSection">Menu</a>
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="#menu">Menu</a>
+        <a href="#how">Cara order</a>
         <a href="#checkout">Checkout</a>
-        <a href="#howItWorks">Cara Order</a>
-        <a href="manage-order.html">Edit Order</a>
       </nav>
 
-      <button id="cartButton" class="cart-button" type="button" aria-label="Buka cart">
+      <button id="cartButton" class="cart-pill" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L20 8H7"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg>
         <span>Cart</span>
-        <b id="cartCount">0</b>
+        <strong id="cartCount">0</strong>
       </button>
     </div>
   </header>
@@ -40,225 +36,185 @@
     <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <span class="kicker">PRE-ORDER SYSTEM • 0 MODAL</span>
-          <h1 id="heroTitle">Order Frozen Food Dengan Cara Yang Lagi Cantik & Mudah</h1>
-          <p id="heroText">
-            Pilih produk, tambah ke cart, isi detail, dan terus hantar order ke seller.
-            Semua order akan direkodkan ke Google Sheet dan customer juga boleh terus sambung ke WhatsApp.
-          </p>
+          <div class="eyebrow"><span></span> PRE-ORDER • HOMEMADE</div>
+          <h1 id="heroTitle">Frozen food sedap, order pun senang.</h1>
+          <p id="heroText">Pilih menu, tambah ke cart dan terus submit. Order masuk Google Sheet dan confirmation terus ke WhatsApp.</p>
 
           <div class="hero-actions">
-            <a href="#menuSection" class="primary-btn">Lihat Menu</a>
-            <a href="#checkout" class="secondary-btn">Terus Checkout</a>
-            <a href="manage-order.html" class="secondary-btn">Edit Order Lama</a>
+            <a href="#menu" class="btn btn-primary">Lihat menu</a>
+            <a href="#how" class="btn btn-ghost">Macam mana nak order?</a>
           </div>
 
-          <div class="hero-stats">
-            <div class="stat-card">
-              <strong>0%</strong>
-              <span>Platform fee</span>
-            </div>
-            <div class="stat-card">
-              <strong>RM0</strong>
-              <span>Hosting berbayar</span>
-            </div>
-            <div class="stat-card">
-              <strong>Live</strong>
-              <span>Ke Google Sheet</span>
-            </div>
+          <div class="benefit-row">
+            <div><strong>RM0</strong><span>platform fee</span></div>
+            <div><strong>Fast</strong><span>checkout</span></div>
+            <div><strong>Direct</strong><span>WhatsApp</span></div>
           </div>
         </div>
 
-        <div class="hero-visual">
-          <div class="hero-feature-card">
-            <div class="mini-badge">Best for small business</div>
-            <h3>Urus order lebih tersusun</h3>
-            <ul>
-              <li>✔ Cart & checkout yang kemas</li>
-              <li>✔ Gambar produk yang cantik</li>
-              <li>✔ WhatsApp confirmation</li>
-              <li>✔ Rekod order dalam Google Sheet</li>
-            </ul>
+        <div class="hero-gallery" aria-label="Featured food">
+          <div class="hero-card hero-card-main">
+            <img src="assets/popia-carbonara.png" alt="Popia Carbonara" />
+            <div class="hero-card-caption">
+              <span>BEST SELLER</span>
+              <strong>Popia Carbonara</strong>
+            </div>
           </div>
-          <div class="floating-food food-1">
+          <div class="hero-card hero-card-small hero-card-left">
             <img src="assets/karipap-sardin.png" alt="Karipap Sardin" />
           </div>
-          <div class="floating-food food-2">
-            <img src="assets/popia-carbonara.png" alt="Popia Carbonara" />
+          <div class="hero-card hero-card-small hero-card-right">
+            <img src="assets/donut-gulung-sosej.png" alt="Donut Gulung Sosej" />
           </div>
+          <div class="floating-note">✨ Homemade & ready to fry</div>
         </div>
       </div>
     </section>
 
-    <section class="trust-strip">
-      <div class="container trust-inner">
-        <span>Simple</span>
-        <span>Modern</span>
-        <span>Mobile Friendly</span>
-        <span>GitHub Pages</span>
-        <span>Google Sheets</span>
-        <span>WhatsApp Ready</span>
+    <section class="mini-strip">
+      <div class="container mini-strip-inner">
+        <span>✓ Easy order</span>
+        <span>✓ DuitNow QR</span>
+        <span>✓ Pickup / COD</span>
+        <span>✓ WhatsApp confirmation</span>
       </div>
     </section>
 
-    <section id="menuSection" class="section">
+    <section class="section menu-section" id="menu">
       <div class="container">
-        <div class="section-head">
+        <div class="section-heading">
           <div>
-            <span class="section-kicker">MENU</span>
-            <h2>Produk Pilihan</h2>
-            <p>Pilih item kegemaran customer dan tambah terus ke cart.</p>
+            <p class="overline">OUR MENU</p>
+            <h2>Pilih yang sedap.</h2>
+            <p class="section-subtitle">Frozen homemade food yang mudah disimpan dan digoreng bila-bila masa.</p>
           </div>
-          <div class="tools">
-            <input id="searchInput" class="search" type="search" placeholder="Cari produk..." />
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+            <input id="searchInput" type="search" placeholder="Cari menu..." />
           </div>
         </div>
-
         <div id="productGrid" class="product-grid"></div>
       </div>
     </section>
 
-    <section id="howItWorks" class="section section-soft">
-      <div class="container">
-        <div class="section-head center">
-          <div>
-            <span class="section-kicker">CARA ORDER</span>
-            <h2>Mudah Untuk Customer, Mudah Untuk Seller</h2>
-          </div>
+    <section class="section how-section" id="how">
+      <div class="container how-grid">
+        <div class="how-copy">
+          <p class="overline">CARA ORDER</p>
+          <h2>Tak perlu chat panjang-panjang.</h2>
+          <p>Pilih menu sendiri, isi detail dan submit. Seller akan dapat order yang lebih tersusun.</p>
+          <a href="#checkout" class="text-link">Terus ke checkout →</a>
         </div>
 
-        <div class="steps-grid">
-          <article class="step-card">
-            <span class="step-no">01</span>
-            <h3>Pilih Produk</h3>
-            <p>Customer browse menu dan tambah item ke dalam cart.</p>
+        <div class="steps">
+          <article class="step">
+            <span>01</span>
+            <div><h3>Pilih menu</h3><p>Add item dan quantity ke cart.</p></div>
           </article>
-          <article class="step-card">
-            <span class="step-no">02</span>
-            <h3>Isi Maklumat</h3>
-            <p>Nama, WhatsApp, pickup/COD dan cara bayaran.</p>
+          <article class="step">
+            <span>02</span>
+            <div><h3>Isi maklumat</h3><p>Nama, WhatsApp, pickup/COD dan bayaran.</p></div>
           </article>
-          <article class="step-card">
-            <span class="step-no">03</span>
-            <h3>Submit Order</h3>
-            <p>Order terus dihantar ke Google Sheet dan WhatsApp seller.</p>
+          <article class="step">
+            <span>03</span>
+            <div><h3>Submit</h3><p>Order direkodkan terus dalam Google Sheet.</p></div>
           </article>
-          <article class="step-card">
-            <span class="step-no">04</span>
-            <h3>Seller Semak</h3>
-            <p>Seller verify payment dan terus urus pesanan dengan lebih teratur.</p>
+          <article class="step">
+            <span>04</span>
+            <div><h3>Confirm</h3><p>WhatsApp seller terbuka dengan ringkasan order.</p></div>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="checkout" class="section">
+    <section class="section checkout-section" id="checkout">
       <div class="container">
-        <div class="section-head">
+        <div class="section-heading checkout-heading">
           <div>
-            <span class="section-kicker">CHECKOUT</span>
-            <h2>Maklumat Order</h2>
-            <p>Lengkapkan maklumat dan hantar order customer.</p>
+            <p class="overline">CHECKOUT</p>
+            <h2>Complete your order.</h2>
           </div>
         </div>
 
         <div class="checkout-grid">
-          <form id="orderForm" class="glass-card form-panel">
+          <form id="orderForm" class="checkout-card">
+            <div class="card-title">
+              <span>1</span>
+              <div><h3>Maklumat customer</h3><p>Isi maklumat untuk seller confirm order.</p></div>
+            </div>
+
             <div class="form-grid">
               <div class="field">
                 <label for="customerName">Nama</label>
-                <input id="customerName" name="customerName" autocomplete="name" required />
+                <input id="customerName" name="customerName" placeholder="Nama anda" required />
               </div>
-
               <div class="field">
                 <label for="phone">No. WhatsApp</label>
                 <input id="phone" name="phone" inputmode="tel" placeholder="01xxxxxxxx" required />
               </div>
-
               <div class="field">
-                <label for="fulfilment">Cara Terima</label>
+                <label for="fulfilment">Cara terima</label>
                 <select id="fulfilment" name="fulfilment" required>
                   <option value="Pickup">Pickup</option>
                   <option value="COD">COD</option>
                 </select>
               </div>
-
               <div class="field hidden" id="locationField">
                 <label for="location">Lokasi COD</label>
                 <input id="location" name="location" placeholder="Contoh: Taman Desa Jaya" />
-                <small>Caj COD akan disahkan kemudian oleh seller.</small>
+                <small>Caj COD akan disahkan seller.</small>
               </div>
-
               <div class="field">
-                <label for="paymentMethod">Cara Bayaran</label>
+                <label for="paymentMethod">Cara bayaran</label>
                 <select id="paymentMethod" name="paymentMethod" required>
                   <option value="DuitNow QR">DuitNow QR</option>
                   <option value="Cash">Cash</option>
                 </select>
               </div>
-
-              <div class="field">
-                <label for="note">Nota (optional)</label>
+              <div class="field field-note">
+                <label for="note">Nota <em>optional</em></label>
                 <textarea id="note" name="note" rows="4" placeholder="Contoh: pickup tengahari"></textarea>
               </div>
             </div>
 
-            <div id="qrPanel" class="qr-panel">
-              <div class="qr-box">
-                <div id="qrPlaceholder" class="qr-placeholder">
-                  <span>QR</span>
-                  <small>Tambah fail <b>assets/qr.png</b></small>
-                </div>
+            <div id="qrPanel" class="payment-card">
+              <div class="qr-frame">
+                <div id="qrPlaceholder" class="qr-placeholder"><strong>QR</strong><small>Letak assets/qr.png</small></div>
                 <img id="qrImage" class="qr-image hidden" alt="DuitNow QR" />
               </div>
-
-              <div class="qr-copy">
-                <h4>Bayar melalui DuitNow QR</h4>
-                <strong id="qrAccountName">Nama Akaun Seller</strong>
-                <p>Selepas bayar, customer boleh terus hantar screenshot resit melalui WhatsApp.</p>
+              <div>
+                <span class="payment-label">DUITNOW QR</span>
+                <h4 id="qrAccountName">Nama Akaun Seller</h4>
+                <p>Selepas bayar, hantar screenshot resit melalui WhatsApp.</p>
               </div>
             </div>
 
-            <div class="field honeypot" aria-hidden="true">
+            <div class="honeypot" aria-hidden="true">
               <label for="website">Website</label>
               <input id="website" name="website" tabindex="-1" autocomplete="off" />
             </div>
 
-            <label class="terms">
+            <label class="confirm-check">
               <input id="confirmOrder" type="checkbox" required />
               <span>Saya telah semak item dan jumlah order.</span>
             </label>
 
-            <button class="primary-btn full" id="submitButton" type="submit">Submit Order</button>
-            <p class="muted-text">Order akan direkodkan ke Google Sheet dan WhatsApp seller akan dibuka secara automatik.</p>
+            <button id="submitButton" class="submit-btn" type="submit">Submit order <span>→</span></button>
+            <p class="secure-note">🔒 Order dihantar ke Google Sheet seller dan WhatsApp.</p>
           </form>
 
-          <aside class="glass-card summary-panel">
-            <div class="summary-head">
-              <div>
-                <span class="section-kicker">RINGKASAN</span>
-                <h3>Order Summary</h3>
-              </div>
-              <button id="clearCart" class="text-btn" type="button">Clear</button>
+          <aside class="summary-card">
+            <div class="summary-top">
+              <div><p class="overline">YOUR ORDER</p><h3>Order summary</h3></div>
+              <button id="clearCart" class="clear-btn" type="button">Clear</button>
             </div>
 
-            <div id="cartItems" class="cart-items">
-              <div class="empty-state">Cart masih kosong.</div>
-            </div>
+            <div id="cartItems" class="cart-items"><div class="empty-cart"><span>🛒</span><p>Cart masih kosong.</p></div></div>
 
-            <div class="summary-totals">
-              <div>
-                <span>Subtotal</span>
-                <strong id="subtotal">RM0.00</strong>
-              </div>
-              <div class="muted-row">
-                <span>COD</span>
-                <span>Disahkan kemudian</span>
-              </div>
-              <div class="grand-row">
-                <span>Total Produk</span>
-                <strong id="grandTotal">RM0.00</strong>
-              </div>
+            <div class="summary-bottom">
+              <div class="summary-line"><span>Subtotal</span><strong id="subtotal">RM0.00</strong></div>
+              <div class="summary-line subtle"><span>COD fee</span><span>Confirm kemudian</span></div>
+              <div class="summary-total"><span>Total produk</span><strong id="grandTotal">RM0.00</strong></div>
             </div>
           </aside>
         </div>
@@ -266,43 +222,30 @@
     </section>
   </main>
 
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand"><img src="assets/logo.png" alt="NiagaSimple" /></div>
+      <p>Simple ordering for small businesses.</p>
+      <span>GitHub Pages • Google Sheets • WhatsApp</span>
+    </div>
+  </footer>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <div id="cartDrawer" class="drawer" aria-hidden="true">
     <div class="drawer-backdrop" data-close-drawer></div>
-    <div class="drawer-panel">
-      <div class="drawer-head">
-        <div>
-          <span class="section-kicker">CART</span>
-          <h3>Pesanan Anda</h3>
-        </div>
-        <button class="icon-btn" data-close-drawer type="button">✕</button>
+    <aside class="drawer-panel">
+      <div class="drawer-header">
+        <div><p class="overline">CART</p><h3>Pesanan anda</h3></div>
+        <button class="drawer-close" type="button" data-close-drawer aria-label="Tutup">×</button>
       </div>
-
-      <div id="drawerItems" class="cart-items"></div>
-
+      <div id="drawerItems" class="cart-items drawer-items"></div>
       <div class="drawer-footer">
-        <div class="drawer-total">
-          <span>Total</span>
-          <strong id="drawerTotal">RM0.00</strong>
-        </div>
-        <button id="goCheckout" class="primary-btn full" type="button">Pergi Checkout</button>
+        <div><span>Total</span><strong id="drawerTotal">RM0.00</strong></div>
+        <button id="goCheckout" class="submit-btn" type="button">Checkout <span>→</span></button>
       </div>
-    </div>
+    </aside>
   </div>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <img src="assets/logo.png" alt="NiagaSimple logo" />
-        <div>
-          <strong id="footerBrand">NiagaSimple</strong>
-          <p>Powered by GitHub Pages + Google Sheets + WhatsApp</p>
-        </div>
-      </div>
-      <span class="footer-note">Sesuai untuk bisnes kecil, seller frozen food dan pre-order.</span>
-    </div>
-  </footer>
 
   <script src="config.js"></script>
   <script src="app.js"></script>
