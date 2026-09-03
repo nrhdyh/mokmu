@@ -1,25 +1,43 @@
 (() => {
+
+  // =========================================================
+  // CONFIG & CART
+  // =========================================================
+
   const config = window.STORE_CONFIG;
   const cart = new Map();
 
-  const $ = (s) => document.querySelector(s);
-  const $$ = (s) => [...document.querySelectorAll(s)];
+  const $ = (selector) =>
+    document.querySelector(selector);
+
+  const $$ = (selector) =>
+    [...document.querySelectorAll(selector)];
+
+
+  // =========================================================
+  // ELEMENTS
+  // =========================================================
 
   const els = {
+
     heroTitle: $("#heroTitle"),
     heroText: $("#heroText"),
+
     productGrid: $("#productGrid"),
     searchInput: $("#searchInput"),
 
     cartButton: $("#cartButton"),
     cartCount: $("#cartCount"),
+
     cartDrawer: $("#cartDrawer"),
     drawerItems: $("#drawerItems"),
     drawerTotal: $("#drawerTotal"),
+
     goCheckout: $("#goCheckout"),
 
     cartItems: $("#cartItems"),
     clearCart: $("#clearCart"),
+
     subtotal: $("#subtotal"),
     grandTotal: $("#grandTotal"),
 
@@ -28,6 +46,7 @@
     location: $("#location"),
 
     paymentMethod: $("#paymentMethod"),
+
     qrPanel: $("#qrPanel"),
     qrPlaceholder: $("#qrPlaceholder"),
     qrImage: $("#qrImage"),
@@ -39,368 +58,942 @@
     toast: $("#toast")
   };
 
+
   // =========================================================
   // HELPERS
   // =========================================================
 
-  const money = (n) =>
-    `${config.currency}${Number(n).toFixed(2)}`;
+  const money = (amount) => {
+    return `${config.currency}${Number(amount).toFixed(2)}`;
+  };
 
-  const escapeHtml = (v) =>
-    String(v)
+
+  const escapeHtml = (value) => {
+
+    return String(value)
+
       .replace(/&/g, "&amp;")
+
       .replace(/</g, "&lt;")
+
       .replace(/>/g, "&gt;")
+
       .replace(/"/g, "&quot;")
+
       .replace(/'/g, "&#039;");
+  };
+
 
   // =========================================================
   // INITIALIZE
   // =========================================================
 
   function init() {
+
     if (els.heroTitle) {
-      els.heroTitle.textContent = config.heroTitle;
+      els.heroTitle.textContent =
+        config.heroTitle || "";
     }
+
 
     if (els.heroText) {
-      els.heroText.textContent = config.heroText;
+      els.heroText.textContent =
+        config.heroText || "";
     }
+
 
     if (els.qrAccountName) {
-      els.qrAccountName.textContent = config.qrAccountName;
+      els.qrAccountName.textContent =
+        config.qrAccountName || "";
     }
 
-    // Load QR image if exists
-    if (config.qrImage) {
-      const test = new Image();
 
-      test.onload = () => {
-        els.qrImage.src = config.qrImage;
-        els.qrImage.classList.remove("hidden");
-        els.qrPlaceholder.classList.add("hidden");
+    // =====================================
+    // QR IMAGE
+    // =====================================
+
+    if (
+      config.qrImage &&
+      els.qrImage &&
+      els.qrPlaceholder
+    ) {
+
+      const qrTest = new Image();
+
+
+      qrTest.onload = () => {
+
+        els.qrImage.src =
+          config.qrImage;
+
+        els.qrImage.classList.remove(
+          "hidden"
+        );
+
+        els.qrPlaceholder.classList.add(
+          "hidden"
+        );
       };
 
-      test.onerror = () => {
-        console.warn("QR image tidak dijumpai:", config.qrImage);
+
+      qrTest.onerror = () => {
+
+        console.warn(
+          "QR image tidak dijumpai:",
+          config.qrImage
+        );
       };
 
-      test.src = config.qrImage;
+
+      qrTest.src =
+        config.qrImage;
     }
+
 
     renderProducts();
+
     renderCart();
+
     toggleFulfilment();
+
     togglePayment();
+
     bindEvents();
   }
 
+
   // =========================================================
-  // PRODUCTS
+  // PRODUCT DISPLAY
   // =========================================================
 
   function renderProducts(query = "") {
-    const q = query.toLowerCase().trim();
 
-    const rows = config.products.filter((product) => {
-      const text = `
-        ${product.name || ""}
-        ${product.variant || ""}
-        ${product.description || ""}
-      `.toLowerCase();
+    const q =
+      String(query)
+        .toLowerCase()
+        .trim();
 
-      return text.includes(q);
-    });
 
-    if (!rows.length) {
+    const products =
+      config.products.filter(
+        (product) => {
+
+          const searchableText = `
+
+            ${product.name || ""}
+
+            ${product.variant || ""}
+
+            ${product.description || ""}
+
+          `
+            .toLowerCase();
+
+
+          return searchableText.includes(q);
+        }
+      );
+
+
+    // =====================================
+    // NO PRODUCT
+    // =====================================
+
+    if (!products.length) {
+
       els.productGrid.innerHTML = `
+
         <div class="empty-cart">
-          <p>Tiada produk dijumpai.</p>
+
+          <p>
+            Tiada produk dijumpai.
+          </p>
+
         </div>
+
       `;
+
       return;
     }
 
-    els.productGrid.innerHTML = rows
-      .map(
-        (product) => `
-        <article class="product-card">
 
-          <div class="product-media">
+    // =====================================
+    // PRODUCT CARDS
+    // =====================================
 
-            ${
-              product.badge
-                ? `
-              <span class="product-badge">
-                ${escapeHtml(product.badge)}
-              </span>
-            `
-                : ""
-            }
+    els.productGrid.innerHTML =
+      products
 
-            <img
-              src="${escapeHtml(product.image || "")}"
-              alt="${escapeHtml(product.name)}"
-              loading="lazy"
-            >
+        .map((product) => {
 
-          </div>
+          const cartItem =
+            cart.get(product.id);
 
-          <div class="product-body">
 
-            <div>
-              <h3>
-                ${escapeHtml(product.name)}
-              </h3>
+          const qty =
+            cartItem
+              ? cartItem.qty
+              : 0;
 
-              <p>
-                <strong>
-                  ${escapeHtml(product.variant || "")}
-                </strong>
+
+          return `
+
+            <article class="product-card">
+
+
+              <div class="product-media">
+
 
                 ${
-                  product.description
-                    ? ` · ${escapeHtml(product.description)}`
+                  product.badge
+
+                    ? `
+
+                      <span class="product-badge">
+
+                        ${escapeHtml(
+                          product.badge
+                        )}
+
+                      </span>
+
+                    `
+
                     : ""
                 }
-              </p>
-            </div>
 
-            <div class="product-meta">
 
-              <span class="price">
-                ${money(product.price)}
-              </span>
+                <img
 
-              <button
-                class="add-btn"
-                type="button"
-                data-add="${escapeHtml(product.id)}"
-              >
-                + Add
-              </button>
+                  src="${escapeHtml(
+                    product.image || ""
+                  )}"
 
-            </div>
+                  alt="${escapeHtml(
+                    product.name
+                  )}"
 
-          </div>
+                  loading="lazy"
 
-        </article>
-      `
-      )
-      .join("");
+                >
 
-    $$("[data-add]").forEach((button) => {
-      button.addEventListener("click", () => {
-        addToCart(button.dataset.add);
+
+              </div>
+
+
+              <div class="product-body">
+
+
+                <div>
+
+
+                  <h3>
+
+                    ${escapeHtml(
+                      product.name
+                    )}
+
+                  </h3>
+
+
+                  <p>
+
+                    <strong>
+
+                      ${escapeHtml(
+                        product.variant || ""
+                      )}
+
+                    </strong>
+
+
+                    ${
+                      product.description
+
+                        ? ` · ${escapeHtml(
+                            product.description
+                          )}`
+
+                        : ""
+                    }
+
+
+                  </p>
+
+
+                </div>
+
+
+                <div class="product-meta">
+
+
+                  <span class="price">
+
+                    ${money(
+                      product.price
+                    )}
+
+                  </span>
+
+
+                  ${
+                    qty === 0
+
+                      ? `
+
+                        <button
+
+                          class="add-btn"
+
+                          type="button"
+
+                          data-add="${escapeHtml(
+                            product.id
+                          )}"
+
+                        >
+
+                          + Add
+
+                        </button>
+
+                      `
+
+                      : `
+
+                        <div class="product-qty-control">
+
+
+                          <button
+
+                            type="button"
+
+                            class="product-qty-btn"
+
+                            data-product-minus="${escapeHtml(
+                              product.id
+                            )}"
+
+                          >
+
+                            −
+
+                          </button>
+
+
+                          <span class="product-qty-number">
+
+                            ${qty}
+
+                          </span>
+
+
+                          <button
+
+                            type="button"
+
+                            class="product-qty-btn"
+
+                            data-product-plus="${escapeHtml(
+                              product.id
+                            )}"
+
+                          >
+
+                            +
+
+                          </button>
+
+
+                        </div>
+
+                      `
+                  }
+
+
+                </div>
+
+
+              </div>
+
+
+            </article>
+
+          `;
+        })
+
+        .join("");
+
+
+    // =====================================
+    // FIRST ADD BUTTON
+    // =====================================
+
+    $$("[data-add]")
+
+      .forEach((button) => {
+
+        button.addEventListener(
+          "click",
+
+          () => {
+
+            addToCart(
+              button.dataset.add
+            );
+          }
+        );
       });
-    });
+
+
+    // =====================================
+    // PRODUCT MINUS
+    // =====================================
+
+    $$("[data-product-minus]")
+
+      .forEach((button) => {
+
+        button.addEventListener(
+          "click",
+
+          () => {
+
+            updateQty(
+              button.dataset.productMinus,
+              -1
+            );
+          }
+        );
+      });
+
+
+    // =====================================
+    // PRODUCT PLUS
+    // =====================================
+
+    $$("[data-product-plus]")
+
+      .forEach((button) => {
+
+        button.addEventListener(
+          "click",
+
+          () => {
+
+            updateQty(
+              button.dataset.productPlus,
+              1
+            );
+          }
+        );
+      });
   }
+
 
   // =========================================================
-  // CART
+  // ADD TO CART
   // =========================================================
 
-  function addToCart(id) {
-    const product = config.products.find(
-      (product) => product.id === id
-    );
+  function addToCart(productId) {
 
-    if (!product) return;
-
-    const existing = cart.get(id);
-
-    cart.set(id, {
-      product,
-      qty: existing ? existing.qty + 1 : 1
-    });
-
-    renderCart();
-
-    toast(`${product.name} ditambah ke cart`);
-  }
-
-  function updateQty(id, change) {
-    const row = cart.get(id);
-
-    if (!row) return;
-
-    row.qty += change;
-
-    if (row.qty <= 0) {
-      cart.delete(id);
-    } else {
-      cart.set(id, row);
-    }
-
-    renderCart();
-  }
-
-  function cartRows() {
-    return [...cart.values()];
-  }
-
-  function subtotalValue() {
-    return cartRows().reduce((sum, row) => {
-      return (
-        sum +
-        Number(row.product.price) * Number(row.qty)
+    const product =
+      config.products.find(
+        (product) =>
+          product.id === productId
       );
-    }, 0);
-  }
 
-  function cartMarkup() {
-    if (!cart.size) {
-      return `
-        <div class="empty-cart">
-          <span>🛒</span>
-          <p>Cart masih kosong.</p>
-        </div>
-      `;
+
+    if (!product) {
+      return;
     }
 
-    return cartRows()
-      .map(
-        ({ product, qty }) => `
-        <div class="cart-row">
 
-          <div class="cart-info">
+    const existing =
+      cart.get(productId);
 
-            <strong>
-              ${escapeHtml(product.name)}
-              ${
-                product.variant
-                  ? `(${escapeHtml(product.variant)})`
-                  : ""
-              }
-            </strong>
 
-            <span>
-              ${money(product.price)} × ${qty}
-            </span>
+    cart.set(
+      productId,
 
-          </div>
+      {
 
-          <div class="qty-control">
+        product,
 
-            <button
-              type="button"
-              data-minus="${escapeHtml(product.id)}"
-            >
-              −
-            </button>
-
-            <span>
-              ${qty}
-            </span>
-
-            <button
-              type="button"
-              data-plus="${escapeHtml(product.id)}"
-            >
-              +
-            </button>
-
-          </div>
-
-        </div>
-      `
-      )
-      .join("");
-  }
-
-  function renderCart() {
-    const markup = cartMarkup();
-
-    els.cartItems.innerHTML = markup;
-    els.drawerItems.innerHTML = markup;
-
-    [els.cartItems, els.drawerItems].forEach(
-      (container) => {
-        container
-          .querySelectorAll("[data-minus]")
-          .forEach((button) => {
-            button.onclick = () =>
-              updateQty(
-                button.dataset.minus,
-                -1
-              );
-          });
-
-        container
-          .querySelectorAll("[data-plus]")
-          .forEach((button) => {
-            button.onclick = () =>
-              updateQty(
-                button.dataset.plus,
-                1
-              );
-          });
+        qty:
+          existing
+            ? existing.qty + 1
+            : 1
       }
     );
 
-    const count = cartRows().reduce(
-      (sum, row) => sum + row.qty,
-      0
+
+    // Update cart
+    renderCart();
+
+
+    // Update product quantity button
+    renderProducts(
+      els.searchInput
+        ? els.searchInput.value
+        : ""
     );
 
-    const total = subtotalValue();
 
-    els.cartCount.textContent = count;
-    els.subtotal.textContent = money(total);
-    els.grandTotal.textContent = money(total);
-    els.drawerTotal.textContent = money(total);
+    toast(
+      `${product.name} ditambah`
+    );
   }
+
+
+  // =========================================================
+  // UPDATE QUANTITY
+  // =========================================================
+
+  function updateQty(productId, change) {
+
+    const row =
+      cart.get(productId);
+
+
+    if (!row) {
+      return;
+    }
+
+
+    row.qty += change;
+
+
+    // =====================================
+    // REMOVE IF 0
+    // =====================================
+
+    if (row.qty <= 0) {
+
+      cart.delete(
+        productId
+      );
+
+    } else {
+
+      cart.set(
+        productId,
+        row
+      );
+    }
+
+
+    // Update cart
+    renderCart();
+
+
+    // Update product card
+    renderProducts(
+      els.searchInput
+        ? els.searchInput.value
+        : ""
+    );
+  }
+
+
+  // =========================================================
+  // CART ARRAY
+  // =========================================================
+
+  function cartRows() {
+
+    return [
+      ...cart.values()
+    ];
+  }
+
+
+  // =========================================================
+  // SUBTOTAL
+  // =========================================================
+
+  function subtotalValue() {
+
+    return cartRows()
+
+      .reduce(
+
+        (total, row) => {
+
+          return (
+
+            total +
+
+            Number(
+              row.product.price
+            )
+
+            *
+
+            Number(
+              row.qty
+            )
+          );
+        },
+
+        0
+      );
+  }
+
+
+  // =========================================================
+  // CART HTML
+  // =========================================================
+
+  function cartMarkup() {
+
+    if (!cart.size) {
+
+      return `
+
+        <div class="empty-cart">
+
+          <span>
+            🛒
+          </span>
+
+          <p>
+            Cart masih kosong.
+          </p>
+
+        </div>
+
+      `;
+    }
+
+
+    return cartRows()
+
+      .map(
+
+        ({
+          product,
+          qty
+        }) => {
+
+          return `
+
+            <div class="cart-row">
+
+
+              <div class="cart-info">
+
+
+                <strong>
+
+                  ${escapeHtml(
+                    product.name
+                  )}
+
+                  ${
+                    product.variant
+
+                      ? `(${escapeHtml(
+                          product.variant
+                        )})`
+
+                      : ""
+                  }
+
+                </strong>
+
+
+                <span>
+
+                  ${money(
+                    product.price
+                  )}
+
+                  ×
+
+                  ${qty}
+
+                </span>
+
+
+              </div>
+
+
+              <div class="qty-control">
+
+
+                <button
+
+                  type="button"
+
+                  data-minus="${escapeHtml(
+                    product.id
+                  )}"
+
+                >
+
+                  −
+
+                </button>
+
+
+                <span>
+
+                  ${qty}
+
+                </span>
+
+
+                <button
+
+                  type="button"
+
+                  data-plus="${escapeHtml(
+                    product.id
+                  )}"
+
+                >
+
+                  +
+
+                </button>
+
+
+              </div>
+
+
+            </div>
+
+          `;
+        }
+      )
+
+      .join("");
+  }
+
+
+  // =========================================================
+  // RENDER CART
+  // =========================================================
+
+  function renderCart() {
+
+    const markup =
+      cartMarkup();
+
+
+    if (els.cartItems) {
+      els.cartItems.innerHTML =
+        markup;
+    }
+
+
+    if (els.drawerItems) {
+      els.drawerItems.innerHTML =
+        markup;
+    }
+
+
+    // =====================================
+    // BIND CART BUTTONS
+    // =====================================
+
+    [
+      els.cartItems,
+      els.drawerItems
+    ]
+
+      .filter(Boolean)
+
+      .forEach((container) => {
+
+
+        container
+
+          .querySelectorAll(
+            "[data-minus]"
+          )
+
+          .forEach((button) => {
+
+            button.onclick = () => {
+
+              updateQty(
+
+                button.dataset.minus,
+
+                -1
+              );
+            };
+          });
+
+
+        container
+
+          .querySelectorAll(
+            "[data-plus]"
+          )
+
+          .forEach((button) => {
+
+            button.onclick = () => {
+
+              updateQty(
+
+                button.dataset.plus,
+
+                1
+              );
+            };
+          });
+      });
+
+
+    // =====================================
+    // TOTAL QUANTITY
+    // =====================================
+
+    const totalQty =
+      cartRows()
+
+        .reduce(
+
+          (total, row) =>
+            total +
+            Number(row.qty),
+
+          0
+        );
+
+
+    const total =
+      subtotalValue();
+
+
+    if (els.cartCount) {
+      els.cartCount.textContent =
+        totalQty;
+    }
+
+
+    if (els.subtotal) {
+      els.subtotal.textContent =
+        money(total);
+    }
+
+
+    if (els.grandTotal) {
+      els.grandTotal.textContent =
+        money(total);
+    }
+
+
+    if (els.drawerTotal) {
+      els.drawerTotal.textContent =
+        money(total);
+    }
+  }
+
 
   // =========================================================
   // CART DRAWER
   // =========================================================
 
   function openDrawer() {
-    els.cartDrawer.classList.add("open");
+
+    if (!els.cartDrawer) {
+      return;
+    }
+
+
+    els.cartDrawer.classList.add(
+      "open"
+    );
+
 
     els.cartDrawer.setAttribute(
       "aria-hidden",
       "false"
     );
 
-    document.body.style.overflow = "hidden";
+
+    document.body.style.overflow =
+      "hidden";
   }
 
+
   function closeDrawer() {
-    els.cartDrawer.classList.remove("open");
+
+    if (!els.cartDrawer) {
+      return;
+    }
+
+
+    els.cartDrawer.classList.remove(
+      "open"
+    );
+
 
     els.cartDrawer.setAttribute(
       "aria-hidden",
       "true"
     );
 
-    document.body.style.overflow = "";
+
+    document.body.style.overflow =
+      "";
   }
 
+
   // =========================================================
-  // FULFILMENT
+  // PICKUP / COD
   // =========================================================
 
   function toggleFulfilment() {
+
+    if (
+      !els.fulfilment ||
+      !els.locationField ||
+      !els.location
+    ) {
+      return;
+    }
+
+
     const isCOD =
-      els.fulfilment.value === "COD";
+      els.fulfilment.value ===
+      "COD";
+
 
     els.locationField.classList.toggle(
       "hidden",
       !isCOD
     );
 
-    els.location.required = isCOD;
+
+    els.location.required =
+      isCOD;
   }
+
 
   // =========================================================
   // PAYMENT
   // =========================================================
 
   function togglePayment() {
+
+    if (
+      !els.paymentMethod ||
+      !els.qrPanel
+    ) {
+      return;
+    }
+
+
     const isQR =
       els.paymentMethod.value ===
       "DuitNow QR";
+
 
     els.qrPanel.classList.toggle(
       "hidden",
@@ -408,100 +1001,171 @@
     );
   }
 
+
   // =========================================================
   // ORDER ID
   // =========================================================
 
-  function orderId() {
-    const d = new Date();
+  function createOrderId() {
 
-    const year = String(
-      d.getFullYear()
-    ).slice(-2);
+    const date =
+      new Date();
 
-    const month = String(
-      d.getMonth() + 1
-    ).padStart(2, "0");
 
-    const day = String(
-      d.getDate()
-    ).padStart(2, "0");
+    const year =
+      String(
+        date.getFullYear()
+      ).slice(-2);
+
+
+    const month =
+      String(
+        date.getMonth() + 1
+      ).padStart(
+        2,
+        "0"
+      );
+
+
+    const day =
+      String(
+        date.getDate()
+      ).padStart(
+        2,
+        "0"
+      );
+
 
     const random =
       Math.random()
+
         .toString(36)
+
         .slice(2, 6)
+
         .toUpperCase();
+
 
     return `ORD-${year}${month}${day}-${random}`;
   }
+
 
   // =========================================================
   // PHONE
   // =========================================================
 
   function normalizePhone(phone) {
-    let p = String(phone).replace(
-      /\D/g,
-      ""
-    );
 
-    // 0123456789 -> 60123456789
-    if (p.startsWith("0")) {
-      p = "6" + p;
+    let number =
+      String(phone)
+
+        .replace(
+          /\D/g,
+          ""
+        );
+
+
+    // Example:
+    // 0123456789
+    // =>
+    // 60123456789
+
+    if (
+      number.startsWith("0")
+    ) {
+
+      number =
+        "6" + number;
     }
 
-    // 123456789 -> 60123456789
-    if (!p.startsWith("60")) {
-      p = "60" + p;
+
+    if (
+      !number.startsWith("60")
+    ) {
+
+      number =
+        "60" + number;
     }
 
-    return p;
+
+    return number;
   }
 
+
   function validPhone(phone) {
+
     const digits =
-      String(phone).replace(
-        /\D/g,
-        ""
-      );
+      String(phone)
+
+        .replace(
+          /\D/g,
+          ""
+        );
+
 
     return (
-      digits.length >= 9 &&
+
+      digits.length >= 9
+
+      &&
+
       digits.length <= 13
     );
   }
+
 
   // =========================================================
   // WHATSAPP MESSAGE
   // =========================================================
 
   function waMessage(order) {
+
     const lines = [
+
       `Hi, saya nak confirm order ${order.orderId}.`,
+
       "",
+
       `Nama: ${order.customerName}`,
+
       `Cara terima: ${order.fulfilment}${
         order.location
           ? ` - ${order.location}`
           : ""
       }`,
+
       `Bayaran: ${order.paymentMethod}`,
+
       "",
+
       "ITEM:"
     ];
 
-    order.items.forEach((item) => {
-      lines.push(
-        `- ${item.name}${
-          item.variant
-            ? ` (${item.variant})`
-            : ""
-        } x${item.qty} = ${money(
-          item.lineTotal
-        )}`
-      );
-    });
+
+    // =====================================
+    // ITEMS
+    // =====================================
+
+    order.items
+
+      .forEach((item) => {
+
+        lines.push(
+
+          `- ${item.name}${
+            item.variant
+              ? ` (${item.variant})`
+              : ""
+          } x${item.qty} = ${money(
+            item.lineTotal
+          )}`
+        );
+      });
+
+
+    // =====================================
+    // TOTAL
+    // =====================================
 
     lines.push(
       "",
@@ -510,105 +1174,183 @@
       )}`
     );
 
-    if (order.fulfilment === "COD") {
+
+    // =====================================
+    // COD
+    // =====================================
+
+    if (
+      order.fulfilment ===
+      "COD"
+    ) {
+
       lines.push(
         "Caj COD: akan disahkan seller"
       );
     }
 
+
+    // =====================================
+    // NOTE
+    // =====================================
+
     if (order.note) {
+
       lines.push(
         `Nota: ${order.note}`
       );
     }
 
+
     lines.push("");
+
+
+    // =====================================
+    // PAYMENT MESSAGE
+    // =====================================
 
     if (
       order.paymentMethod ===
       "DuitNow QR"
     ) {
+
       lines.push(
         "Saya akan hantar screenshot resit di sini selepas pembayaran."
       );
+
     } else {
+
       lines.push(
         "Payment: Cash."
       );
     }
+
 
     lines.push(
       "",
       "Terima kasih."
     );
 
+
     return lines
+
       .filter(
-        (line, index, arr) =>
-          !(
-            line === "" &&
-            arr[index - 1] === ""
-          )
+
+        (
+          line,
+          index,
+          array
+        ) => {
+
+          return !(
+            line === ""
+
+            &&
+
+            array[
+              index - 1
+            ] === ""
+          );
+        }
       )
+
       .join("\n");
   }
 
+
   // =========================================================
-  // GOOGLE SHEETS
+  // SEND TO GOOGLE SHEET
   // =========================================================
 
   async function sendToSheet(order) {
-    const url = String(
-      config.appsScriptUrl || ""
-    ).trim();
+
+    const url =
+      String(
+        config.appsScriptUrl ||
+        ""
+      )
+
+        .trim();
+
 
     if (
-      !url ||
+      !url
+
+      ||
+
       url.includes(
         "PASTE_APPS_SCRIPT"
       )
     ) {
+
       throw new Error(
         "Apps Script URL belum diset dalam config.js"
       );
     }
 
-    if (!url.endsWith("/exec")) {
+
+    if (
+      !url.endsWith("/exec")
+    ) {
+
       console.warn(
         "Apps Script URL sepatutnya berakhir dengan /exec"
       );
     }
 
-    await fetch(url, {
-      method: "POST",
 
-      // Required for GitHub Pages
-      // -> Google Apps Script
-      mode: "no-cors",
+    await fetch(
 
-      cache: "no-store",
+      url,
 
-      headers: {
-        "Content-Type":
-          "text/plain;charset=utf-8"
-      },
+      {
 
-      body: JSON.stringify(order)
-    });
+        method:
+          "POST",
+
+
+        // GitHub Pages
+        // ->
+        // Apps Script
+        mode:
+          "no-cors",
+
+
+        cache:
+          "no-store",
+
+
+        headers: {
+
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+
+
+        body:
+          JSON.stringify(
+            order
+          )
+      }
+    );
   }
+
 
   // =========================================================
   // SUBMIT ORDER
   // =========================================================
 
-  async function submitOrder(e) {
-    e.preventDefault();
+  async function submitOrder(event) {
 
-    // ---------------------------------------
-    // CART VALIDATION
-    // ---------------------------------------
+    event.preventDefault();
+
+
+    // =====================================
+    // EMPTY CART
+    // =====================================
 
     if (!cart.size) {
+
       toast(
         "Cart masih kosong"
       );
@@ -616,55 +1358,85 @@
       return;
     }
 
-    const fd =
+
+    const formData =
       new FormData(
         els.orderForm
       );
 
-    // Spam bot protection
-    if (fd.get("website")) {
+
+    // =====================================
+    // HONEYPOT
+    // =====================================
+
+    if (
+      formData.get(
+        "website"
+      )
+    ) {
+
       return;
     }
 
-    // ---------------------------------------
-    // FORM DATA
-    // ---------------------------------------
+
+    // =====================================
+    // FORM VALUES
+    // =====================================
 
     const customerName =
       String(
-        fd.get("customerName") || ""
+        formData.get(
+          "customerName"
+        ) || ""
       ).trim();
+
 
     const phone =
       String(
-        fd.get("phone") || ""
+        formData.get(
+          "phone"
+        ) || ""
       ).trim();
+
 
     const fulfilment =
       String(
-        fd.get("fulfilment") || ""
+        formData.get(
+          "fulfilment"
+        ) || ""
       );
+
 
     const location =
       String(
-        fd.get("location") || ""
+        formData.get(
+          "location"
+        ) || ""
       ).trim();
+
 
     const paymentMethod =
       String(
-        fd.get("paymentMethod") || ""
+        formData.get(
+          "paymentMethod"
+        ) || ""
       );
+
 
     const note =
       String(
-        fd.get("note") || ""
+        formData.get(
+          "note"
+        ) || ""
       ).trim();
 
-    // ---------------------------------------
-    // VALIDATION
-    // ---------------------------------------
+
+    // =====================================
+    // VALIDATE NAME
+    // =====================================
 
     if (!customerName) {
+
       toast(
         "Sila masukkan nama"
       );
@@ -672,7 +1444,17 @@
       return;
     }
 
-    if (!validPhone(phone)) {
+
+    // =====================================
+    // VALIDATE PHONE
+    // =====================================
+
+    if (
+      !validPhone(
+        phone
+      )
+    ) {
+
       toast(
         "No. WhatsApp tidak sah"
       );
@@ -680,10 +1462,20 @@
       return;
     }
 
+
+    // =====================================
+    // VALIDATE COD
+    // =====================================
+
     if (
-      fulfilment === "COD" &&
+      fulfilment ===
+      "COD"
+
+      &&
+
       !location
     ) {
+
       toast(
         "Sila isi lokasi COD"
       );
@@ -691,206 +1483,374 @@
       return;
     }
 
-    // ---------------------------------------
-    // CREATE ORDER
-    // ---------------------------------------
+
+    // =====================================================
+    // CREATE ORDER OBJECT
+    // =====================================================
 
     const order = {
-      orderId: orderId(),
+
+      orderId:
+        createOrderId(),
+
 
       createdAtClient:
-        new Date().toISOString(),
+        new Date()
+          .toISOString(),
+
 
       storeName:
         config.storeName,
 
-      customerName,
+
+      customerName:
+
+
+        customerName,
+
 
       phone:
-        normalizePhone(phone),
+        normalizePhone(
+          phone
+        ),
 
-      fulfilment,
 
-      location,
+      fulfilment:
 
-      paymentMethod,
 
-      note,
+        fulfilment,
 
-      // Currently COD fee
-      // manually entered in GSheet
-      codFee: 0,
+
+      location:
+
+
+        location,
+
+
+      paymentMethod:
+
+
+        paymentMethod,
+
+
+      note:
+
+
+        note,
+
+
+      // =====================================
+      // COD currently manual
+      // Apps Script expects this value
+      // =====================================
+
+      codFee:
+        0,
+
 
       subtotal:
         Number(
-          subtotalValue().toFixed(2)
+          subtotalValue()
+            .toFixed(2)
         ),
 
-      status: "NEW",
+
+      status:
+        "NEW",
+
 
       paymentStatus:
+
         paymentMethod ===
         "DuitNow QR"
+
           ? "PENDING VERIFY"
+
           : "CASH",
 
+
+      // =====================================
+      // ITEMS
+      // =====================================
+
       items:
-        cartRows().map(
-          ({ product, qty }) => ({
-            productId:
-              product.id,
 
-            name:
-              product.name,
+        cartRows()
 
-            variant:
-              product.variant || "",
+          .map(
+            ({
+              product,
+              qty
+            }) => {
 
-            unitPrice:
-              Number(
-                product.price
-              ),
+              return {
 
-            qty:
-              Number(qty),
+                productId:
+                  product.id,
 
-            lineTotal:
-              Number(
-                (
-                  Number(product.price) *
-                  Number(qty)
-                ).toFixed(2)
-              )
-          })
-        )
+
+                name:
+                  product.name,
+
+
+                variant:
+                  product.variant ||
+                  "",
+
+
+                unitPrice:
+                  Number(
+                    product.price
+                  ),
+
+
+                qty:
+                  Number(
+                    qty
+                  ),
+
+
+                lineTotal:
+                  Number(
+
+                    (
+                      Number(
+                        product.price
+                      )
+
+                      *
+
+                      Number(
+                        qty
+                      )
+                    )
+
+                      .toFixed(2)
+                  )
+              };
+            }
+          )
     };
 
-    // ---------------------------------------
-    // DISABLE BUTTON
-    // ---------------------------------------
 
-    els.submitButton.disabled = true;
+    // =====================================================
+    // SUBMIT BUTTON
+    // =====================================================
+
+    els.submitButton.disabled =
+      true;
+
 
     els.submitButton.innerHTML =
       "Submitting... <span>→</span>";
 
+
     try {
 
-      // =====================================
-      // 1. SEND ORDER TO GOOGLE SHEET
-      // =====================================
 
-      await sendToSheet(order);
+      // ===================================================
+      // 1. SEND TO GOOGLE SHEET
+      // ===================================================
 
-      // =====================================
-      // 2. SAVE LOCAL BACKUP
-      // =====================================
+      await sendToSheet(
+        order
+      );
+
+
+      // ===================================================
+      // 2. SAVE BACKUP
+      // ===================================================
 
       try {
+
         localStorage.setItem(
+
           `order_${order.orderId}`,
-          JSON.stringify(order)
+
+          JSON.stringify(
+            order
+          )
         );
-      } catch (storageError) {
+
+      } catch (
+        storageError
+      ) {
+
         console.warn(
-          "Local storage unavailable:",
+          "Local storage error:",
           storageError
         );
       }
 
-      // =====================================
-      // 3. CREATE WHATSAPP URL
-      // =====================================
+
+      // ===================================================
+      // 3. WHATSAPP NUMBER
+      // ===================================================
 
       const whatsappNumber =
-        String(
-          config.sellerWhatsApp || ""
-        )
-          .replace(/\D/g, "");
 
-      if (!whatsappNumber) {
+        String(
+          config.sellerWhatsApp ||
+          ""
+        )
+
+          .replace(
+            /\D/g,
+            ""
+          );
+
+
+      if (
+        !whatsappNumber
+      ) {
+
         throw new Error(
           "No. WhatsApp seller belum diset dalam config.js"
         );
       }
 
-      const waUrl =
-        `https://wa.me/${whatsappNumber}` +
+
+      // ===================================================
+      // 4. WHATSAPP URL
+      // ===================================================
+
+      const whatsappUrl =
+
+        `https://wa.me/${whatsappNumber}`
+
+        +
+
         `?text=${encodeURIComponent(
-          waMessage(order)
+          waMessage(
+            order
+          )
         )}`;
 
-      // =====================================
-      // 4. SAVE ORDER ID FOR REFERENCE
-      // =====================================
 
-      sessionStorage.setItem(
-        "lastOrderId",
-        order.orderId
-      );
+      // ===================================================
+      // 5. SAVE LAST ORDER
+      // ===================================================
 
-      // =====================================
-      // 5. CLEAR CART
-      // =====================================
+      try {
+
+        sessionStorage.setItem(
+
+          "lastOrderId",
+
+          order.orderId
+        );
+
+      } catch (
+        storageError
+      ) {
+
+        console.warn(
+          storageError
+        );
+      }
+
+
+      // ===================================================
+      // 6. CLEAR CART
+      // ===================================================
 
       cart.clear();
 
+
       renderCart();
 
-      // =====================================
-      // 6. REDIRECT DIRECTLY TO WHATSAPP
+
+      renderProducts(
+        els.searchInput
+          ? els.searchInput.value
+          : ""
+      );
+
+
+      // ===================================================
+      // 7. REDIRECT TO WHATSAPP
       //
       // IMPORTANT:
-      // Do NOT use window.open()
-      // because mobile browsers may
-      // block it as a popup.
-      // =====================================
+      // Same tab redirect is more reliable
+      // on mobile than window.open().
+      // ===================================================
 
-      window.location.href = waUrl;
+      window.location.href =
+        whatsappUrl;
 
-    } catch (err) {
+
+    } catch (error) {
+
 
       console.error(
         "Submit error:",
-        err
+        error
       );
 
+
       toast(
-        err.message ||
+
+        error.message
+
+        ||
+
         "Gagal submit order"
       );
 
+
     } finally {
 
-      els.submitButton.disabled = false;
+
+      els.submitButton.disabled =
+        false;
+
 
       els.submitButton.innerHTML =
         "Submit order <span>→</span>";
     }
   }
 
+
   // =========================================================
   // TOAST
   // =========================================================
 
-  function toast(msg) {
-    els.toast.textContent = msg;
+  function toast(message) {
+
+    if (!els.toast) {
+      return;
+    }
+
+
+    els.toast.textContent =
+      message;
+
 
     els.toast.classList.add(
       "show"
     );
 
+
     clearTimeout(
       toast.timer
     );
 
+
     toast.timer =
-      setTimeout(() => {
-        els.toast.classList.remove(
-          "show"
-        );
-      }, 2200);
+      setTimeout(
+
+        () => {
+
+          els.toast.classList.remove(
+            "show"
+          );
+
+        },
+
+        2200
+      );
   }
+
 
   // =========================================================
   // EVENTS
@@ -898,66 +1858,152 @@
 
   function bindEvents() {
 
-    // Search
-    els.searchInput.addEventListener(
-      "input",
-      (e) => {
-        renderProducts(
-          e.target.value
-        );
-      }
-    );
 
-    // Cart
-    els.cartButton.onclick =
-      openDrawer;
+    // =====================================
+    // SEARCH
+    // =====================================
+
+    if (els.searchInput) {
+
+      els.searchInput.addEventListener(
+
+        "input",
+
+        (event) => {
+
+          renderProducts(
+            event.target.value
+          );
+        }
+      );
+    }
+
+
+    // =====================================
+    // OPEN CART
+    // =====================================
+
+    if (els.cartButton) {
+
+      els.cartButton.onclick =
+        openDrawer;
+    }
+
+
+    // =====================================
+    // CLOSE CART
+    // =====================================
 
     $$(
       "[data-close-drawer]"
-    ).forEach((element) => {
-      element.onclick =
-        closeDrawer;
-    });
+    )
 
-    // Checkout button
-    els.goCheckout.onclick =
-      () => {
-        closeDrawer();
+      .forEach(
+        (button) => {
 
-        $("#checkout")
-          .scrollIntoView({
-            behavior: "smooth"
-          });
-      };
+          button.onclick =
+            closeDrawer;
+        }
+      );
 
-    // Clear cart
-    els.clearCart.onclick =
-      () => {
-        cart.clear();
-        renderCart();
 
-        toast(
-          "Cart dikosongkan"
-        );
-      };
+    // =====================================
+    // GO CHECKOUT
+    // =====================================
 
-    // Fulfilment
-    els.fulfilment.onchange =
-      toggleFulfilment;
+    if (els.goCheckout) {
 
-    // Payment
-    els.paymentMethod.onchange =
-      togglePayment;
+      els.goCheckout.onclick =
+        () => {
 
-    // Submit
-    els.orderForm.addEventListener(
-      "submit",
-      submitOrder
-    );
+          closeDrawer();
+
+
+          const checkout =
+            $("#checkout");
+
+
+          if (checkout) {
+
+            checkout.scrollIntoView({
+
+              behavior:
+                "smooth"
+            });
+          }
+        };
+    }
+
+
+    // =====================================
+    // CLEAR CART
+    // =====================================
+
+    if (els.clearCart) {
+
+      els.clearCart.onclick =
+        () => {
+
+          cart.clear();
+
+
+          renderCart();
+
+
+          renderProducts(
+            els.searchInput
+              ? els.searchInput.value
+              : ""
+          );
+
+
+          toast(
+            "Cart dikosongkan"
+          );
+        };
+    }
+
+
+    // =====================================
+    // FULFILMENT
+    // =====================================
+
+    if (els.fulfilment) {
+
+      els.fulfilment.onchange =
+        toggleFulfilment;
+    }
+
+
+    // =====================================
+    // PAYMENT
+    // =====================================
+
+    if (els.paymentMethod) {
+
+      els.paymentMethod.onchange =
+        togglePayment;
+    }
+
+
+    // =====================================
+    // SUBMIT
+    // =====================================
+
+    if (els.orderForm) {
+
+      els.orderForm.addEventListener(
+
+        "submit",
+
+        submitOrder
+      );
+    }
   }
 
+
   // =========================================================
-  // START
+  // START APP
   // =========================================================
 
   init();
