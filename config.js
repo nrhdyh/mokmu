@@ -8,7 +8,7 @@ window.STORE_CONFIG = {
   heroText: "Pilih menu, tambah ke cart dan terus submit. Order masuk Google Sheet dan confirmation terus ke WhatsApp.",
 
   // Format Malaysia: 60123456789
-  sellerWhatsApp: "60123456789",
+  sellerWhatsApp: "60125057046",
 
   // Nama pemilik akaun QR
   qrAccountName: "NAMA AKAUN SELLER",
@@ -29,7 +29,7 @@ window.STORE_CONFIG = {
       id: "P001",
       name: "Karipap Sardin",
       variant: "10 biji",
-      price: 7.00,
+      price: 6.00,
       description: "Homemade, frozen dan ready to fry.",
       image: "assets/karipap-sardin.png",
       badge: "Hot item"
@@ -38,7 +38,7 @@ window.STORE_CONFIG = {
       id: "P002",
       name: "Karipap Sardin",
       variant: "18 biji",
-      price: 11.00,
+      price: 10.00,
       description: "Value pack untuk customer yang nak lebih banyak.",
       image: "assets/karipap-sardin.png",
       badge: "Value pack"
@@ -47,7 +47,7 @@ window.STORE_CONFIG = {
       id: "P003",
       name: "Popia Carbonara",
       variant: "10 biji",
-      price: 11.00,
+      price: 10.00,
       description: "Rangup di luar dengan creamy filling di dalam.",
       image: "assets/popia-carbonara.png",
       badge: "Best seller"
@@ -56,7 +56,7 @@ window.STORE_CONFIG = {
       id: "P004",
       name: "Donut Gulung Sosej",
       variant: "10 biji",
-      price: 6.00,
+      price: 5.00,
       description: "Mini size, lembut dan sesuai untuk seisi keluarga.",
       image: "assets/donut-gulung-sosej.png",
       badge: "Family favourite"
