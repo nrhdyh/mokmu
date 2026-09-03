@@ -93,3 +93,312 @@
   }
 
 }
+
+/* =========================================================
+   EDIT ORDER ADD-ON ONLY
+   Everything above this block is your ORIGINAL styles.css.
+   ========================================================= */
+
+.desktop-nav .active-nav{
+  color:var(--green);
+}
+
+.back-pill{
+  border:0;
+  background:#172019;
+  color:#fff;
+  padding:11px 17px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:13px;
+  transition:.2s ease;
+}
+
+.back-pill:hover{
+  background:var(--green);
+}
+
+.manage-page{
+  min-height:calc(100vh - 84px);
+  padding:68px 0 78px;
+  background:var(--cream);
+}
+
+.manage-heading{
+  max-width:720px;
+  margin:0 auto 34px;
+  text-align:center;
+}
+
+.manage-heading h1{
+  margin:8px 0 14px;
+  font:800 clamp(42px,6vw,68px)/1 'Manrope',sans-serif;
+  letter-spacing:-.05em;
+  color:var(--ink);
+}
+
+.manage-heading>p:last-child{
+  max-width:650px;
+  margin:0 auto;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.75;
+}
+
+.manage-lookup-card,
+.manage-summary-card{
+  background:#fff;
+  border:1px solid #dfe5df;
+  border-radius:28px;
+  padding:26px;
+  box-shadow:0 14px 34px rgba(40,55,45,.06);
+}
+
+.manage-lookup-card{
+  max-width:850px;
+  margin:0 auto;
+}
+
+.manage-card-title{
+  padding-bottom:19px;
+  border-bottom:1px solid #e6eae6;
+  margin-bottom:20px;
+}
+
+.manage-card-title h2{
+  margin:5px 0 0;
+  font:800 24px 'Manrope',sans-serif;
+  color:var(--ink);
+}
+
+.manage-lookup-form{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  align-items:end;
+  gap:14px;
+}
+
+.manage-search-btn{
+  width:auto;
+  min-width:150px;
+  height:47px;
+}
+
+.manage-message{
+  margin-top:16px;
+  padding:13px 14px;
+  border-radius:13px;
+  border:1px solid #f0c7c7;
+  background:#fff0f0;
+  color:#8c3333;
+  font-size:12px;
+  line-height:1.6;
+}
+
+.manage-message.warning{
+  margin:18px 0 0;
+  border-color:#ebd292;
+  background:#fff8dd;
+  color:#6d5715;
+}
+
+.manage-message.success{
+  border-color:#b9ddc9;
+  background:#edf8f1;
+  color:#225f3f;
+}
+
+.manage-editor{
+  margin-top:52px;
+}
+
+.manage-order-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:20px;
+}
+
+.manage-order-head h2{
+  margin:7px 0 0;
+  font:800 clamp(30px,4vw,44px) 'Manrope',sans-serif;
+  letter-spacing:-.04em;
+  color:var(--ink);
+}
+
+.order-status-badge{
+  padding:9px 13px;
+  border-radius:999px;
+  background:#fff4ce;
+  color:#715710;
+  border:1px solid #ecd996;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+
+.order-status-badge[data-status="CONFIRMED"]{
+  background:#eaf0ff;
+  border-color:#cddaff;
+  color:#38558b;
+}
+
+.order-status-badge[data-status="PREPARING"]{
+  background:#f4eaff;
+  border-color:#dec8f4;
+  color:#6d428f;
+}
+
+.order-status-badge[data-status="READY"],
+.order-status-badge[data-status="COMPLETED"]{
+  background:#e9f7ef;
+  border-color:#c9e8d5;
+  color:#246243;
+}
+
+.order-status-badge[data-status="CANCELLED"]{
+  background:#fff0f0;
+  border-color:#efcaca;
+  color:#8a3838;
+}
+
+.manage-info-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:20px;
+}
+
+.manage-info-card{
+  padding:17px;
+  border:1px solid #dfe5df;
+  border-radius:18px;
+  background:#fff;
+}
+
+.manage-info-card span{
+  display:block;
+  margin-bottom:5px;
+  color:var(--muted);
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-weight:700;
+}
+
+.manage-info-card strong{
+  font-size:13px;
+  color:var(--ink);
+}
+
+.manage-products{
+  padding:62px 0 38px;
+}
+
+.manage-section-heading{
+  margin-bottom:28px;
+}
+
+.manage-products .product-card.is-locked{
+  opacity:.7;
+}
+
+.manage-summary-card{
+  width:min(720px,100%);
+  margin:8px auto 0;
+}
+
+.manage-summary-card .summary-bottom{
+  margin-bottom:18px;
+}
+
+.manage-update-btn{
+  margin-top:18px;
+}
+
+.edit-summary-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px;
+  border:1px solid #e3e8e3;
+  background:#fbfcfa;
+  border-radius:15px;
+}
+
+.edit-summary-row>div{
+  min-width:0;
+}
+
+.edit-summary-row strong{
+  display:block;
+  font-size:12px;
+  color:var(--ink);
+}
+
+.edit-summary-row span{
+  display:block;
+  margin-top:2px;
+  color:var(--muted);
+  font-size:10px;
+}
+
+@media(max-width:900px){
+  .manage-lookup-form{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .manage-search-btn{
+    grid-column:1/-1;
+    width:100%;
+  }
+
+  .manage-info-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media(max-width:760px){
+  .back-pill{
+    padding:9px 12px;
+    font-size:11px;
+  }
+
+  .manage-page{
+    padding-top:48px;
+  }
+
+  .manage-lookup-form{
+    grid-template-columns:1fr;
+  }
+
+  .manage-search-btn{
+    grid-column:auto;
+  }
+}
+
+@media(max-width:560px){
+  .manage-heading{
+    text-align:left;
+  }
+
+  .manage-heading>p:last-child{
+    margin:0;
+  }
+
+  .manage-info-grid{
+    grid-template-columns:1fr;
+  }
+
+  .manage-order-head{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .manage-lookup-card,
+  .manage-summary-card{
+    padding:18px;
+    border-radius:22px;
+  }
+}
