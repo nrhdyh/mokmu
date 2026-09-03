@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Edit Order | NiagaSimple</title>
+  <meta name="description" content="Semak dan kemas kini order anda." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <img src="assets/logo.png" alt="NiagaSimple logo" class="brand-logo" />
+        <div class="brand-copy">
+          <strong>NiagaSimple</strong>
+          <span>Edit order anda</span>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">Menu</a>
+        <a href="manage-order.html">Edit Order</a>
+      </nav>
+
+      <a class="secondary-btn compact-btn" href="index.html">← Kembali</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="manage-hero">
+      <div class="container manage-shell">
+        <div class="manage-intro">
+          <span class="kicker">MANAGE ORDER</span>
+          <h1>Edit order sebelum diproses</h1>
+          <p>
+            Masukkan Order ID dan nombor WhatsApp yang digunakan semasa order.
+            Anda boleh ubah quantity, tambah atau buang produk selagi order masih dibenarkan untuk diedit.
+          </p>
+        </div>
+
+        <section class="glass-card lookup-card" id="lookupCard">
+          <div class="section-head">
+            <div>
+              <span class="section-kicker dark-kicker">CARI ORDER</span>
+              <h2>Semak order anda</h2>
+            </div>
+          </div>
+
+          <form id="lookupForm" class="lookup-form">
+            <div class="field">
+              <label for="lookupOrderId">Order ID</label>
+              <input
+                id="lookupOrderId"
+                name="orderId"
+                placeholder="Contoh: ORD-260903-AB12"
+                autocomplete="off"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <label for="lookupPhone">No. WhatsApp</label>
+              <input
+                id="lookupPhone"
+                name="phone"
+                placeholder="01xxxxxxxx"
+                inputmode="tel"
+                required
+              />
+            </div>
+
+            <button class="primary-btn full" id="lookupButton" type="submit">
+              Cari Order
+            </button>
+          </form>
+
+          <div id="lookupMessage" class="manage-message hidden"></div>
+        </section>
+
+        <section id="editorSection" class="hidden">
+          <div class="manage-order-top">
+            <div>
+              <span class="section-kicker">ORDER DIJUMPAI</span>
+              <h2 id="editOrderId">-</h2>
+            </div>
+
+            <div id="statusBadge" class="order-status-badge">NEW</div>
+          </div>
+
+          <div class="order-info-grid">
+            <div class="glass-card info-card">
+              <span>Nama</span>
+              <strong id="editCustomer">-</strong>
+            </div>
+            <div class="glass-card info-card">
+              <span>Tarikh</span>
+              <strong id="editDate">-</strong>
+            </div>
+            <div class="glass-card info-card">
+              <span>Terima</span>
+              <strong id="editFulfilment">-</strong>
+            </div>
+            <div class="glass-card info-card">
+              <span>Bayaran</span>
+              <strong id="editPayment">-</strong>
+            </div>
+          </div>
+
+          <div id="lockedMessage" class="manage-message warning hidden"></div>
+
+          <section class="section manage-products-section">
+            <div class="section-head">
+              <div>
+                <span class="section-kicker">EDIT ITEM</span>
+                <h2>Ubah quantity</h2>
+                <p>Tekan − atau +. Quantity 0 bermaksud item dibuang daripada order.</p>
+              </div>
+            </div>
+
+            <div id="editProductGrid" class="product-grid"></div>
+          </section>
+
+          <section class="glass-card edit-summary-card">
+            <div>
+              <span class="section-kicker dark-kicker">ORDER TERBARU</span>
+              <h3>Ringkasan</h3>
+            </div>
+
+            <div id="editSummaryItems" class="edit-summary-items"></div>
+
+            <div class="summary-totals">
+              <div>
+                <span>Subtotal Baru</span>
+                <strong id="editSubtotal">RM0.00</strong>
+              </div>
+
+              <div class="muted-row">
+                <span>COD Fee</span>
+                <strong id="existingCodFee">RM0.00</strong>
+              </div>
+
+              <div class="grand-row">
+                <span>Jumlah</span>
+                <strong id="editGrandTotal">RM0.00</strong>
+              </div>
+            </div>
+
+            <button id="updateOrderButton" class="primary-btn full" type="button">
+              Update Order
+            </button>
+
+            <p class="muted-text">
+              Selepas berjaya update, WhatsApp seller akan dibuka dengan ringkasan order terbaru.
+            </p>
+          </section>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="assets/logo.png" alt="NiagaSimple logo" />
+        <div>
+          <strong>NiagaSimple</strong>
+          <p>Self-service edit untuk order yang belum diproses.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="manage-order.js"></script>
+</body>
+</html>
